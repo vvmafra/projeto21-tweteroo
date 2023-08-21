@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpException, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Post, Query, Res } from '@nestjs/common';
 import { AppService } from './app.service';
 import { CreateUserDto } from './DTOS/user.dto';
 import { response } from 'express';
@@ -8,6 +8,10 @@ import { CreateTweetDto } from './DTOS/tweet.dto';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @Get()
+  getHealth(): string {
+    return this.appService.getHealth();
+  }
 
   @Post('sign-up')
   @HttpCode(HttpStatus.OK)
@@ -20,6 +24,10 @@ export class AppController {
   createTweet(@Body() body: CreateTweetDto) {
       return this.appService.createTweet(body)
   }
+
+  @Get('tweets')
+  showTweets(@Query('page') page: number) {
+    return this.appService.showLast15Tweets(page)
+  }
+
 }
-
-

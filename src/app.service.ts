@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './DTOS/user.dto';
 import { User } from './entities/user.entity';
 import { CreateTweetDto } from './DTOS/tweet.dto';
+import { Tweet } from './entities/tweet.entity';
 
 @Injectable()
 export class AppService {
@@ -13,6 +14,9 @@ export class AppService {
     this.users = []
   }
 
+  getHealth(): string {
+    return "I'm okay!";
+  }
 
   createUser(body: CreateUserDto){
     this.users.push(body)
@@ -28,5 +32,19 @@ export class AppService {
     this.tweets.push(tweetObj)
   }
 
+  showLast15Tweets(page: number){
+    if (page === undefined || page === null) {
+      page = 1
+    }
+    const pageNumber = Number(page)
+
+    if (pageNumber < 1) throw new HttpException("Bad Request", HttpStatus.BAD_REQUEST)
+
+    const firstIndex = (pageNumber - 1) * 15
+    const lastIndex = firstIndex + 15
+    const allTweets = this.tweets.reverse()
+
+    return allTweets.slice(firstIndex, lastIndex)
+  }
 
 }
