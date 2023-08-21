@@ -47,4 +47,7 @@ export class AppService {
     return allTweets.slice(firstIndex, lastIndex)
   }
 
+  userTweets(username: string){
+    return this.tweets.filter(tweets => tweets.username === username)
+  }
 }
